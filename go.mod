@@ -1,4 +1,4 @@
-module testcrd
+module github.com/roma-glushko/testcrd
 
 go 1.20
 
