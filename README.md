@@ -21,7 +21,7 @@ func TestCRD_AssertDefinitionBackwardCompatible(t *testing.T) {
 		"crd/my_crd.yaml",
 	})
 
-	_ = asserter.AssertFiles(&mt, []string{
+	_ = asserter.AssertFiles(t, []string{
 		"fixtures/my_crd/resource.sample.yaml",
 	})
 }
