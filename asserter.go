@@ -10,6 +10,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kubeyaml "k8s.io/apimachinery/pkg/util/yaml"
+	"k8s.io/kube-openapi/pkg/validation/validate"
 	"os"
 )
 
@@ -19,12 +20,12 @@ type TestingT interface {
 }
 
 type ResourceAsserter struct {
-	validators map[schema.GroupVersionKind]*validation.SchemaValidator
+	validators map[schema.GroupVersionKind]*validate.SchemaValidator
 }
 
 func NewResourceAsserter() *ResourceAsserter {
 	return &ResourceAsserter{
-		validators: make(map[schema.GroupVersionKind]*validation.SchemaValidator),
+		validators: make(map[schema.GroupVersionKind]*validate.SchemaValidator),
 	}
 }
 
@@ -54,13 +55,13 @@ func (a *ResourceAsserter) Load(crds []*apiextensions.CustomResourceDefinition) 
 				return fmt.Errorf("crd did not have validation defined")
 			}
 
-			schemaValidator, _, err := validation.NewSchemaValidator(crdSchema.OpenAPIV3Schema)
+			schemaValidator, _, err := validation.NewSchemaValidator(crdSchema)
 
 			if err != nil {
 				return fmt.Errorf("error on building schema validator: %v", err)
 			}
 
-			a.validators[defVer] = &schemaValidator
+			a.validators[defVer] = schemaValidator
 		}
 	}
 
